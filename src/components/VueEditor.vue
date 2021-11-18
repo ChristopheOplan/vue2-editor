@@ -195,21 +195,27 @@ export default {
     },
 
     setupCustomImageHandler() {
+      console.log("setup custom image handler");
       const toolbar = this.quill.getModule("toolbar");
       toolbar.addHandler("image", this.customImageHandler);
 
-      document.onpaste = function (event) {
+      document.onpaste = (event) => {
         var items = (event.clipboardData || event.originalEvent.clipboardData)
           .items;
         console.log(JSON.stringify(items)); // will give you the mime types
-        emitImageInfo(event);
+        this.emitImagePasted(event);
       };
     },
 
     emitImagePasted($event) {
+      const resetUploader = function () {
+        var uploader = document.getElementById("file-upload");
+        uploader.value = "";
+      };
       const file = ($event.clipboardData || $event.originalEvent.clipboardData)
         .items[0];
       const Editor = this.quill;
+      Editor.focus();
       const range = Editor.getSelection();
       const cursorLocation = range.index;
       this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
@@ -220,6 +226,7 @@ export default {
     },
 
     emitImageInfo($event) {
+      console.log("emitting image info");
       const resetUploader = function () {
         var uploader = document.getElementById("file-upload");
         uploader.value = "";
