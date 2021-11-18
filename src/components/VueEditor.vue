@@ -204,6 +204,7 @@ export default {
           .items;
         console.log(JSON.stringify(items)); // will give you the mime types
         this.emitImagePasted(event);
+        return false;
       };
     },
 
