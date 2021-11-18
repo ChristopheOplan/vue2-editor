@@ -206,6 +206,14 @@ export default {
         this.emitImagePasted(event);
         return false;
       };
+
+      document.ondrop = (event) => {
+        var items = (event.clipboardData || event.originalEvent.clipboardData)
+          .items;
+        console.log(JSON.stringify(items)); // will give you the mime types
+        this.emitImagePasted(event);
+        return false;
+      };
     },
 
     emitImagePasted($event) {
