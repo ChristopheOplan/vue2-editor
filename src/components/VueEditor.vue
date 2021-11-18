@@ -199,21 +199,29 @@ export default {
       const toolbar = this.quill.getModule("toolbar");
       toolbar.addHandler("image", this.customImageHandler);
 
+      //TODO VERIFY FILE TYPE BEFORE CONSIDERING IT AN IMAGE
       document.onpaste = (event) => {
-        var items = (event.clipboardData || event.originalEvent.clipboardData)
-          .items;
-        console.log(JSON.stringify(items)); // will give you the mime types
         this.emitImagePasted(event);
         return false;
       };
 
       document.ondrop = (event) => {
-        var items = (event.clipboardData || event.originalEvent.clipboardData)
-          .items;
-        console.log(JSON.stringify(items)); // will give you the mime types
-        this.emitImagePasted(event);
+        this.imageDroped(event);
         return false;
       };
+    },
+
+    imageDroped($event) {
+      const resetUploader = function () {
+        var uploader = document.getElementById("file-upload");
+        uploader.value = "";
+      };
+      const file = $event.dataTransfer.items[0];
+      const Editor = this.quill;
+      Editor.focus();
+      const range = Editor.getSelection();
+      const cursorLocation = range.index;
+      this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
     },
 
     emitImagePasted($event) {
