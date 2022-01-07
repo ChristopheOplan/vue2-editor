@@ -713,15 +713,13 @@ var script = {
     setupCustomImageHandler: function setupCustomImageHandler() {
       var _this3 = this;
 
-      console.log("setup custom image handler");
       var toolbar = this.quill.getModule("toolbar");
       toolbar.addHandler("image", this.customImageHandler); //TODO VERIFY FILE TYPE BEFORE CONSIDERING IT AN IMAGE
 
-      document.onpaste = function (event) {
-        _this3.emitImagePasted(event);
-
-        return false;
-      };
+      // document.onpaste = function (event) {
+      //   _this3.emitImagePasted(event);
+      //   return false;
+      // };
 
       document.ondrop = function (event) {
         _this3.imageDroped(event);
@@ -734,8 +732,8 @@ var script = {
         var uploader = document.getElementById("file-upload");
         uploader.value = "";
       };
+      var file = $event.dataTransfer.items[0].getAsFile();
 
-      var file = $event.dataTransfer.items[0];
       var Editor = this.quill;
       Editor.focus();
       var range = Editor.getSelection();
