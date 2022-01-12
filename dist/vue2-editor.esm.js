@@ -789,10 +789,14 @@ var script = {
       if (this.value) this.quill.root.innerHTML = this.value; // Set initial editor content
     },
     emitInput() {
-      var editorContent =
+      if(this.quill)
+      {var editorContent =
         this.quill.getHTML() === "<p><br></p>" ? "" : this.quill.getHTML();
 
       this.$emit("input", editorContent);
+
+      }
+      
     },
     handleSelectionChange: function handleSelectionChange(range, oldRange) {
       if (!range && oldRange) {
@@ -848,11 +852,14 @@ var script = {
       };
       var file = $event.dataTransfer.items[0].getAsFile();
 
-      var Editor = this.quill;
-      Editor.focus();
-      var range = Editor.getSelection();
-      var cursorLocation = range.index;
-      this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
+      if(this.quill)
+      {
+        var Editor = this.quill;
+        Editor.focus();
+        var range = Editor.getSelection();
+        var cursorLocation = range.index;
+        this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
+      }
     },
     emitImagePasted: function emitImagePasted($event) {
       var resetUploader = function resetUploader() {
