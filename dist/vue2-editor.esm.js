@@ -879,8 +879,6 @@ var script = {
       this.$refs.fileInput.click();
     },
     emitImageInfo: function emitImageInfo($event) {
-      console.log("emitting image info");
-
       var resetUploader = function resetUploader() {
         var uploader = document.getElementById("file-upload");
         uploader.value = "";
