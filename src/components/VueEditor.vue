@@ -230,7 +230,7 @@ export default {
         uploader.value = "";
       };
       const file = ($event.clipboardData || $event.originalEvent.clipboardData)
-        .items[0];
+        .items[0].getAsFile();
       const Editor = this.quill;
       Editor.focus();
       const range = Editor.getSelection();

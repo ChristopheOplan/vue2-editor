@@ -834,10 +834,10 @@ var script = {
       var toolbar = this.quill.getModule("toolbar");
       toolbar.addHandler("image", this.customImageHandler); //TODO VERIFY FILE TYPE BEFORE CONSIDERING IT AN IMAGE
 
-      // document.onpaste = function (event) {
-      //   _this3.emitImagePasted(event);
-      //   return false;
-      // };
+      document.onpaste = function (event) {
+        _this3.emitImagePasted(event);
+        return false;
+      };
 
       document.ondrop = function (event) {
         _this3.imageDroped(event);
@@ -868,7 +868,8 @@ var script = {
       };
 
       var file = ($event.clipboardData || $event.originalEvent.clipboardData)
-        .items[0];
+        .items[0].getAsFile();
+
       var Editor = this.quill;
       Editor.focus();
       var range = Editor.getSelection();
