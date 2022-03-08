@@ -200,41 +200,54 @@ export default {
       toolbar.addHandler("image", this.customImageHandler);
 
       //TODO VERIFY FILE TYPE BEFORE CONSIDERING IT AN IMAGE
-      document.onpaste = (event) => {
-        this.emitImagePasted(event);
-        return false;
+      document.onpaste = function (event) {
+        var file = (
+          event.clipboardData || event.originalEvent.clipboardData
+        ).items[0].getAsFile();
+
+        if (file) {
+          _this3.emitImagePasted(file);
+          return false;
+        }
+
+        return true;
       };
 
-      document.ondrop = (event) => {
-        this.imageDroped(event);
-        return false;
+      document.ondrop = function (event) {
+        var file = event.dataTransfer.items[0].getAsFile();
+
+        if(file)
+        {
+          _this3.imageDroped(file);
+          return false;
+        }
       };
     },
 
-    imageDroped($event) {
-      const resetUploader = function () {
+    imageDroped: function imageDroped(file) {
+      var resetUploader = function resetUploader() {
         var uploader = document.getElementById("file-upload");
         uploader.value = "";
       };
-      const file = $event.dataTransfer.items[0];
-      const Editor = this.quill;
-      Editor.focus();
-      const range = Editor.getSelection();
-      const cursorLocation = range.index;
-      this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
-    },
 
-    emitImagePasted($event) {
-      const resetUploader = function () {
+      if (this.quill) {
+        var Editor = this.quill;
+        Editor.focus();
+        var range = Editor.getSelection();
+        var cursorLocation = range.index;
+        this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
+      }
+    },
+    emitImagePasted: function emitImagePasted(file) {
+      var resetUploader = function resetUploader() {
         var uploader = document.getElementById("file-upload");
         uploader.value = "";
       };
-      const file = ($event.clipboardData || $event.originalEvent.clipboardData)
-        .items[0].getAsFile();
-      const Editor = this.quill;
+
+      var Editor = this.quill;
       Editor.focus();
-      const range = Editor.getSelection();
-      const cursorLocation = range.index;
+      var range = Editor.getSelection();
+      var cursorLocation = range.index;
       this.$emit("image-added", file, Editor, cursorLocation, resetUploader);
     },
 
