@@ -833,13 +833,24 @@ var script = {
       toolbar.addHandler("image", this.customImageHandler); //TODO VERIFY FILE TYPE BEFORE CONSIDERING IT AN IMAGE
 
       document.onpaste = function (event) {
-        var file = (
+        var fileFromFiles = (
+          event.clipboardData || event.originalEvent.clipboardData
+        ).files[0];
+
+        var fileFromItems = (
           event.clipboardData || event.originalEvent.clipboardData
         ).items[0].getAsFile();
 
-        if (file) {
-          _this3.emitImagePasted(file);
-          return false;
+        if (fileFromFiles && fileFromItems) {
+          if (fileFromFiles.lastModified > fileFromItems.lastModified) {
+            _this3.emitImagePasted(fileFromFiles);
+          } else {
+            _this3.emitImagePasted(fileFromItems);
+          }
+        } else if (fileFromItems) {
+          _this3.emitImagePasted(fileFromItems);
+        } else if (fileFromFiles) {
+          _this3.emitImagePasted(fileFromFiles);
         }
 
         return true;
@@ -848,8 +859,7 @@ var script = {
       document.ondrop = function (event) {
         var file = event.dataTransfer.items[0].getAsFile();
 
-        if(file)
-        {
+        if (file) {
           _this3.imageDroped(file);
           return false;
         }
